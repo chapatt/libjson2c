@@ -1,0 +1,23 @@
+First, the user program manages the lexical analysis and tokenization, feeding
+a string of JSON and allocated token structures to JSMN.
+
+Next, the tokens are parsed in cooperation with libjson2c. The source JSON
+string and (now populated) array of tokens are provided to parse_tokens along
+with a grammar (an instance of conf_schema or tree of linked schemas
+containing aptly initialized conf_element's representing the desired syntax
+for the input and the destination and handling of the output).
+
+When parse_tokens finds a key matching a leaf element in the schema (e.g. of so
+called type LEAF_INT, LEAF_STRING, or friends), it dispatches a pointer to
+the next token (the value) to install_val along with the matching conf_element
+in order to be installed at the location pointed to by the val_p in
+conf_element.
+
+When a NODE_SCHEMA is found (usually indicating a value of array or object
+type), parse_tokens recurses and parses with the schema provided in val_p.
+
+When a NODE_FN is found, the value is provided to the function pointed to by
+fn_p, which can then do as it wishes, returning to parse_tokens when it's done.
+This option might be used when structures need to be dynamically allocated to
+hold the data, and handily, parse_tokens can be called with a conf_schema
+having elements pointing to the new locations in which to install values.
