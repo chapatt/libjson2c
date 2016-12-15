@@ -19,7 +19,7 @@ enum conf_elem_flag {
 	REQUIRED =	001,	/* key is required */
 	COLLECTED =	002,	/* key has been found */
 	USE_LAST =	010,	/* later occurences of key replace prev. val */
-	FAIL_REPEAT =	020	/* return error on repeated key */
+	NO_REPEAT =	020	/* return error on repeated key */
 };
 
 struct conf_element {

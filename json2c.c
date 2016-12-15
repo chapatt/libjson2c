@@ -38,6 +38,17 @@ const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
 				return NULL;
 			}
 			if (cmp == 0) {
+				if (conf_elem->flags & COLLECTED) {
+					if (conf_elem->flags & NO_REPEAT) {
+						fprintf(stderr, "No repeats\n");
+						return NULL;
+					}
+					if (!(conf_elem->flags & USE_LAST)) {
+						t += 2;
+						break;
+					}
+				}
+
 				switch (conf_elem->val_type) {
 				case LEAF_INT:
 				case LEAF_BOOL:
