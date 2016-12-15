@@ -67,7 +67,7 @@ const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
 					}
 					break;
 				}
-				conf_elem->collected = true;
+				conf_elem->flags |= COLLECTED;
 				break; /* don't test rest of schema */
 			}
 		}
@@ -93,7 +93,9 @@ static bool check_schema_completion(const char *key, struct conf_schema *conf_sc
 
 	for (i=0; i < conf_schema->size; ++i) {
 		conf_elem = &conf_schema->conf_elems[i];
-		if (conf_elem->required && !conf_elem->collected) {
+		if (conf_elem->flags & REQUIRED
+			&& !conf_elem->flags & COLLECTED)
+		{
 			fprintf(stderr, "Badly formed configuration: "
 				"%s is required in %s!\n", conf_elem->key, key);
 			return false;

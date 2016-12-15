@@ -15,10 +15,16 @@ enum conf_elem_type {
 	NODE_FN
 };
 
+enum conf_elem_flag {
+	REQUIRED =	001,	/* key is required */
+	COLLECTED =	002,	/* key has been found */
+	USE_LAST =	010,	/* later occurences of key replace prev. val */
+	FAIL_REPEAT =	020	/* return error on repeated key */
+};
+
 struct conf_element {
 	char *key;
-	bool required;
-	bool collected;
+	enum conf_elem_flag flags;
 	enum conf_elem_type val_type;
 	void *val_p;
 	const jsmntok_t *(*fn_p)(const char *js, const jsmntok_t *tok);
