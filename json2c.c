@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Chase Patterson
+ */
+
 #include "json2c.h"
 #include <stdlib.h>
 #include <string.h>

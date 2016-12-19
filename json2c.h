@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Chase Patterson
+ */
+
 #ifndef LIBJSON2C_H
 #define LIBJSON2C_H
 
