@@ -53,10 +53,7 @@ struct conf_schema {
 };
 
 const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
-	const char *key, struct conf_schema *conf_schema);
-
-const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
-	const struct conf_element *conf_elem);
+	struct conf_schema *conf_schema);
 
 int tokstrcmp(const char *js, const jsmntok_t *t, const char *s);
 

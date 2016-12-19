@@ -127,19 +127,19 @@ bool test_iscomplete(void)
 
 	struct conf_schema schema1 = ARR_ARRAY_SIZE((
 		(struct conf_element []) {
-			{"a", REQUIRED, LEAF_INT, NULL, NULL},
-			{"b", REQUIRED, LEAF_INT, NULL, NULL}
+			{ "a", REQUIRED, LEAF_INT, NULL, NULL },
+			{ "b", REQUIRED, LEAF_INT, NULL, NULL }
 		}
 	));
-	test_result = test_result && (!iscomplete("v", &schema1));
+	test_result = test_result && (!iscomplete(&schema1));
 
 	struct conf_schema schema2 = ARR_ARRAY_SIZE((
 		(struct conf_element []) {
-			{"a", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL},
-			{"b", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL}
+			{ "a", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL },
+			{ "b", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL }
 		}
 	));
-	test_result = test_result && (iscomplete("v", &schema2));
+	test_result = test_result && (iscomplete(&schema2));
 
 	return test_result;
 }
@@ -154,17 +154,17 @@ bool test_search_schema(void)
 	jsmntok_t ttok = { JSMN_STRING, 0, strlen(t), 0 };
 	struct conf_schema schema = ARR_ARRAY_SIZE((
 		(struct conf_element []) {
-			{"a", 0, LEAF_INT, NULL, NULL},
-			{"b", 0, LEAF_INT, NULL, NULL}
+			{ "a", 0, LEAF_INT, NULL, NULL },
+			{ "b", 0, LEAF_INT, NULL, NULL }
 		}
 	));
 	struct conf_element *ptrtob = &schema.conf_elems[1];
 
 	test_result = test_result
-		&& (search_schema(s, &stok, "v", &schema) == ptrtob);
+		&& (search_schema(s, &stok, &schema) == ptrtob);
 
 	test_result = test_result
-		&& (search_schema(t, &ttok, "v", &schema) == NULL);
+		&& (search_schema(t, &ttok, &schema) == NULL);
 
 	return test_result;
 }
@@ -201,7 +201,7 @@ bool test_parse_tokens(void)
 			{ "b", 0, NODE_SCHEMA, &subschema, NULL }
 		}
 	));
-	t = parse_tokens(js, toks, "root", &schema);
+	t = parse_tokens(js, toks, &schema);
 
 	test_result = test_result && (t == toks + ARRAY_SIZE(toks));
 	test_result = test_result && (a == 123);

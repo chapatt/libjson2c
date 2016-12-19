@@ -6,9 +6,11 @@
 #include <ctype.h>
 #include <limits.h>
 
-static bool iscomplete(const char *key, struct conf_schema *conf_schema);
+static bool iscomplete(struct conf_schema *conf_schema);
 static struct conf_element *search_schema (const char *js, const jsmntok_t *t,
-	const char *key, struct conf_schema *conf_schema);
+	struct conf_schema *conf_schema);
+static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
+	const struct conf_element *conf_elem);
 
 /*
  * parse_tokens: traverse schema tree in parallel with jsmn tokens
@@ -16,7 +18,7 @@ static struct conf_element *search_schema (const char *js, const jsmntok_t *t,
  * Returns next jsmn token or NULL on error and sets json2cerrno appropriately.
  */ 
 const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
-	const char *key, struct conf_schema *conf_schema)
+	struct conf_schema *conf_schema)
 {
 	size_t children = t->size;
 
@@ -27,7 +29,7 @@ const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
 			return NULL;
 		}
 		struct conf_element *conf_elem =
-			search_schema(js, t, key, conf_schema);
+			search_schema(js, t, conf_schema);
 		if (conf_elem == NULL) {
 			json2cerrno = JSON2C_ESTRANGEKEY;
 			return NULL;
@@ -37,7 +39,7 @@ const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
 		}
 		--children;
 	}
-	if (!iscomplete(key, conf_schema)) {
+	if (!iscomplete(conf_schema)) {
 		json2cerrno = JSON2C_EINCOMPSCH;
 		return NULL;
 	}
@@ -50,7 +52,7 @@ const jsmntok_t *parse_tokens(const char *js, const jsmntok_t *t,
  * Returns pointer to conf_element if found, NULL if not
  */
 static struct conf_element *search_schema(const char *js, const jsmntok_t *t,
-	const char *key, struct conf_schema *conf_schema)
+	struct conf_schema *conf_schema)
 {
 	size_t i;
 	int cmp;
@@ -79,8 +81,7 @@ static struct conf_element *search_schema(const char *js, const jsmntok_t *t,
  * iscomplete: check that required elements have been collected.
  * Returns true if they have been, false if not.
  */
-static bool iscomplete(const char *key,
-	struct conf_schema *conf_schema)
+static bool iscomplete(struct conf_schema *conf_schema)
 {
 	for (size_t i=0; i < conf_schema->size; ++i) {
 		struct conf_element *conf_elem = &conf_schema->conf_elems[i];
@@ -99,7 +100,7 @@ static bool iscomplete(const char *key,
  * call parse_tokens, or call user function.
  * Returns next jsmn token or NULL on error and sets json2cerrno appropriately
  */
-const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
+static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 	const struct conf_element *conf_elem)
 {
 	int tmp_i;
@@ -146,7 +147,7 @@ const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 		*(char **) conf_elem->val_p = tmp_char_p;
 		break;
 	case NODE_SCHEMA:
-		if ((t = parse_tokens(js, t, conf_elem->key,
+		if ((t = parse_tokens(js, t,
 			(struct conf_schema *) conf_elem->val_p))
 			== NULL)
 		{
