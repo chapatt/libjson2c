@@ -244,7 +244,7 @@ int toktoi(const char *js, const jsmntok_t *t)
 		json2cerrno = JSON2C_ERANGE;
 		return 0;
 	}
-	if (l > INT_MAX) {
+	if (l > INT_MAX || l < INT_MIN) {
 		json2cerrno = JSON2C_ERANGE;
 		return 0;
 	}
