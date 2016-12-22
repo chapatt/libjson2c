@@ -1,4 +1,5 @@
-libjson2c: a library for parsing JSON tokenized by jsmn into a C data structure based on a grammar defined in the user program
+libjson2c: a library for parsing JSON tokenized by jsmn into a C data structure
+based on a grammar defined in the user program
 
 Summary of a typical use:
 
@@ -22,10 +23,11 @@ type), install_val calls parse_tokesn to parses with the schema provided in
 val_p.
 
 When a NODE_FN is found, the value is provided to the function pointed to by
-fn_p, which can then do as it wishes, returning to install_val (and then parse_tokens) when it's done. This option might be used when structures need to be
-dynamically allocated to hold the data, and handily, parse_tokens can be called
-with a conf_schema having elements pointing to the new locations in which to
-install values.
+fn_p, which can then do as it wishes, returning to install_val (and then
+parse_tokens) when it's done. This option might be used when structures need to
+be dynamically allocated to hold the data, and handily, parse_tokens can be
+called with a conf_schema having elements pointing to the new locations in which
+to install values.
 
 
 Guidelines for interoperating user functions:
