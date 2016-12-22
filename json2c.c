@@ -14,7 +14,7 @@ static bool iscomplete(struct conf_schema *conf_schema);
 static struct conf_element *search_schema (const char *js, const jsmntok_t *t,
 	struct conf_schema *conf_schema);
 static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
-	const struct conf_element *conf_elem);
+	struct conf_element *conf_elem);
 
 /*
  * parse_tokens: traverse schema tree in parallel with jsmn tokens
@@ -105,7 +105,7 @@ static bool iscomplete(struct conf_schema *conf_schema)
  * Returns next jsmn token or NULL on error and sets json2cerrno appropriately
  */
 static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
-	const struct conf_element *conf_elem)
+	struct conf_element *conf_elem)
 {
 	int tmp_i;
 	bool tmp_bool;
@@ -164,6 +164,7 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 		}
 		break;
 	}
+	conf_elem->flags |= COLLECTED;
 
 	return t;
 }

@@ -102,7 +102,7 @@ bool test_install_val(void)
 	int j = 0;
 	char *istr = "123";
 	jsmntok_t itok = { JSMN_PRIMITIVE, 0, strlen(istr), 0 };
-	const struct conf_element iconf_elem =
+	struct conf_element iconf_elem =
 		{ "i", 0, LEAF_INT, &j, NULL };
 	const jsmntok_t *t = install_val(istr, &itok, &iconf_elem);
 	test_result = test_result && (j == i);
@@ -112,7 +112,7 @@ bool test_install_val(void)
 	int b = false;
 	char *astr = "true";
 	jsmntok_t atok = { JSMN_PRIMITIVE, 0, strlen(astr), 0 };
-	const struct conf_element aconf_elem =
+	struct conf_element aconf_elem =
 		{ "a", 0, LEAF_BOOL, &b, NULL };
 	const jsmntok_t *t2 = install_val(astr, &atok, &aconf_elem);
 	test_result = test_result && (b == a);
@@ -140,6 +140,22 @@ bool test_iscomplete(void)
 		}
 	));
 	test_result = test_result && (iscomplete(&schema2));
+
+	struct conf_schema schema3 = ARR_ARRAY_SIZE((
+		(struct conf_element []) {
+			{ "a", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL },
+			{ "b", 0, LEAF_INT, NULL, NULL }
+		}
+	));
+	test_result = test_result && (iscomplete(&schema3));
+
+	struct conf_schema schema4 = ARR_ARRAY_SIZE((
+		(struct conf_element []) {
+			{ "a", REQUIRED | COLLECTED, LEAF_INT, NULL, NULL },
+			{ "b", COLLECTED, LEAF_INT, NULL, NULL }
+		}
+	));
+	test_result = test_result && (iscomplete(&schema4));
 
 	return test_result;
 }
@@ -207,6 +223,7 @@ bool test_parse_tokens(void)
 	test_result = test_result && (a == 123);
 	test_result = test_result && (ba == 456);
 	test_result = test_result && (bb == 789);
+	test_result = test_result && (schema.conf_elems[0].flags & COLLECTED);
 
 	return test_result;
 }
