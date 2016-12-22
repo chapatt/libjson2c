@@ -121,6 +121,11 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 		}
 	}
 
+	if (conf_elem->val_p == NULL) {
+		json2cerrno = JSON2C_ENULLELEM;
+		return NULL;
+	}
+
 	switch (conf_elem->val_type) {
 	case LEAF_INT:
 		json2cerrno = 0;

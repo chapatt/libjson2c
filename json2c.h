@@ -24,6 +24,7 @@ enum json2cerrnos {
 	JSON2C_ESTRANGEKEY,	/* got key not found in schema */
 	JSON2C_EINCOMPSCH,	/* required keys not collected */
 	JSON2C_EREPEAT,		/* key flagged NO_REPEAT repeated */
+	JSON2C_ENULLELEM,	/* asked to dereference NULL val_p or fn_p */
 	JSON2C_ERANGE,		/* numeric value can't be represented */
 	JSON2C_ENOMEM		/* couldn't allocate memory */
 } json2cerrno;

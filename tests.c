@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2016 Chase Patterson
+ */
+
 #include "json2c.c"
 #include <assert.h>
 #include <string.h>
@@ -108,8 +112,8 @@ bool test_install_val(void)
 	test_result = test_result && (j == i);
 	test_result = test_result && (t = &itok + sizeof(jsmntok_t));
 
-	int a = true;
-	int b = false;
+	bool a = true;
+	bool b = false;
 	char *astr = "true";
 	jsmntok_t atok = { JSMN_PRIMITIVE, 0, strlen(astr), 0 };
 	struct conf_element aconf_elem =
@@ -117,6 +121,15 @@ bool test_install_val(void)
 	const jsmntok_t *t2 = install_val(astr, &atok, &aconf_elem);
 	test_result = test_result && (b == a);
 	test_result = test_result && (t2 = &atok + sizeof(jsmntok_t));
+
+	int k = 123;
+	char *kstr = "123";
+	jsmntok_t ktok = { JSMN_PRIMITIVE, 0, strlen(kstr), 0 };
+	struct conf_element kconf_elem =
+		{ "k", 0, LEAF_INT, NULL, NULL };
+	test_result = test_result
+		&& install_val(kstr, &ktok, &kconf_elem) == NULL;
+	test_result = test_result && (json2cerrno == JSON2C_ENULLELEM);
 
 	return test_result;
 }
