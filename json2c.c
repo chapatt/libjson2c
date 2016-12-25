@@ -121,11 +121,6 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 		}
 	}
 
-	if (conf_elem->val_p == NULL) {
-		json2cerrno = JSON2C_ENULLELEM;
-		return NULL;
-	}
-
 	switch (conf_elem->val_type) {
 	case LEAF_INT:
 		json2cerrno = 0;
@@ -134,6 +129,10 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 			return NULL;
 		}
 
+		if (conf_elem->val_p == NULL) {
+			json2cerrno = JSON2C_ENULLELEM;
+			return NULL;
+		}
 		*(int *) conf_elem->val_p = tmp_i;
 		break;
 	case LEAF_BOOL:
@@ -143,6 +142,10 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 			return NULL;
 		}
 
+		if (conf_elem->val_p == NULL) {
+			json2cerrno = JSON2C_ENULLELEM;
+			return NULL;
+		}
 		*(bool *) conf_elem->val_p = tmp_bool;
 		break;
 	case LEAF_STRING:
@@ -152,10 +155,18 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 			return NULL;
 		}
 
+		if (conf_elem->val_p == NULL) {
+			json2cerrno = JSON2C_ENULLELEM;
+			return NULL;
+		}
 		/* FIXME! free old pointer if malloc'd */
 		*(char **) conf_elem->val_p = tmp_char_p;
 		break;
 	case NODE_SCHEMA:
+		if (conf_elem->val_p == NULL) {
+			json2cerrno = JSON2C_ENULLELEM;
+			return NULL;
+		}
 		if ((t = parse_tokens(js, t,
 			(struct conf_schema *) conf_elem->val_p))
 			== NULL)
@@ -164,6 +175,10 @@ static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 		}
 		break;
 	case NODE_FN:
+		if (conf_elem->fn_p == NULL) {
+			json2cerrno = JSON2C_ENULLELEM;
+			return NULL;
+		}
 		if ((t = (*conf_elem->fn_p)(js, t)) == NULL) {
 			return NULL;
 		}
