@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/ioctl.h>
 
 bool test_toktoi(void);
 bool test_toktoa(void);
@@ -32,10 +33,14 @@ int main(void)
 		{ "parse_tokens", test_parse_tokens }
 	};
 
+	struct winsize w;
+	ioctl(0, TIOCGWINSZ, &w);
+	int cols = w.ws_col;
+
 	size_t fail_count = 0;
 	for (size_t i=0; i < ARRAY_SIZE(tests); ++i) {
 		printf("Testing %s", tests[i].name);
-		for (size_t j = 80 - (14 + strlen(tests[i].name)); j > 0; --j)
+		for (size_t j = cols - (14 + strlen(tests[i].name)); j > 0; --j)
 			putchar('.');
 		bool test_result = tests[i].fn();
 		if (!test_result)
