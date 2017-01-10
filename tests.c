@@ -50,7 +50,7 @@ int main(void)
 		printf("All tests passed!\n");
 		
 
-	return 0;
+	return fail_count;
 }
 
 bool test_toktoi(void)
