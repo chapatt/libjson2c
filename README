@@ -19,7 +19,7 @@ When install_val gets a leaf element (e.g. LEAF_INT, LEAF_STRING, or friends)
 it installs the value at the location pointed to by the val_p.
 
 When a NODE_SCHEMA is found (usually indicating a value of array or object
-type), install_val calls parse_tokesn to parses with the schema provided in
+type), install_val calls parse_tokens to parse with the schema provided in
 val_p.
 
 When a NODE_FN is found, the value is provided to the function pointed to by
@@ -27,7 +27,16 @@ fn_p, which can then do as it wishes, returning to install_val (and then
 parse_tokens) when it's done. This option might be used when structures need to
 be dynamically allocated to hold the data, and handily, parse_tokens can be
 called with a conf_schema having elements pointing to the new locations in which
-to install values.
+to install values. It may not be possible to have parse_tokens (via install_val)
+install the values in their final locations in a data structure, e.g. in the
+case that the locations can not be pointed to directly and must be accessed via
+special accessor functions, or in the case that the values require special
+processing into a non-standard type before being installed. In such cases,
+addresses of temporary variables may be provided as the val_p's in calls to
+parse_tokens with the user helper-function doing the extra work for storage.
+Alternatively, install_val's conversion from JSON and jsmn token to C data
+type might be handled completely by the client program called in the case of a
+conf_elem with val_type NODE_FN.
 
 
 Guidelines for interoperating user functions:
@@ -40,4 +49,4 @@ It takes two arguments, a string of JSON and a pointer to const jsmntok_t.
 It returns a pointer to const jsmntok_t or NULL on error.  On success, it should
 return a pointer to the next token to be processed by the calling procedure.
 
-This convention is followed by library functions parse_tokens and install_val.
+This convention is followed by library function parse_tokens.

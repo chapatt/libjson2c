@@ -11,7 +11,7 @@
 #include <limits.h>
 
 static bool iscomplete(struct conf_schema *conf_schema);
-static struct conf_element *search_schema (const char *js, const jsmntok_t *t,
+static struct conf_element *search_schema(const char *js, const jsmntok_t *t,
 	struct conf_schema *conf_schema);
 static const jsmntok_t *install_val(const char *js, const jsmntok_t *t,
 	struct conf_element *conf_elem);
