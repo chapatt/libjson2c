@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-#include "../jsmn/jsmn.h"
+#include <jsmn.h>
 
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE(x) (sizeof((x)) / sizeof((x)[0]))

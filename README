@@ -1,6 +1,12 @@
 libjson2c: a library for parsing JSON tokenized by jsmn into a C data structure
 based on a grammar defined in the user program
 
+
+Build Procedure:
+
+make CFLAGS=-I<path to directory containing jsmn.h>
+
+
 Summary of a typical use:
 
 First, the user program manages the lexical analysis and tokenization, feeding

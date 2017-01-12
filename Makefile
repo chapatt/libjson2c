@@ -1,6 +1,5 @@
 CC=gcc
 RM=rm
-CFLAGS=-I.
 DEPS=json2c.h
 
 all: check libjson2c.a
