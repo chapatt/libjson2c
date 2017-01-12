@@ -1,5 +1,4 @@
-CC=gcc
-RM=rm
+CC?=gcc
 DEPS=json2c.h
 
 all: check libjson2c.a
@@ -23,4 +22,4 @@ check: tests
 	fi;
 
 clean:
-	$(RM) -f *.o *.a tests
+	rm -f *.o *.a tests
