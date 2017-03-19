@@ -9,11 +9,11 @@ all: check libjson2c.a
 libjson2c.a: json2c.o
 	$(AR) rc $@ $<
 
-tests: tests.c json2c.c $(DEPS)
+test: test.c json2c.c $(DEPS)
 	$(CC) -o $@ $< $(CFLAGS)
 
-check: tests
-	@./tests; \
+check: test
+	@./test; \
 	rc=$$?; \
 	if [ $$rc -eq 0 ]; then \
 		exit 0; \
@@ -22,4 +22,4 @@ check: tests
 	fi;
 
 clean:
-	rm -f *.o *.a tests
+	rm -f *.o *.a test
