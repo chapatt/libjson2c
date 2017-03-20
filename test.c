@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <sys/ioctl.h>
 
+#define MIN_COLS 35
+
 bool test_toktoi(void);
 bool test_toktoa(void);
 bool test_tokstrcmp(void);
@@ -36,11 +38,15 @@ int main(void)
 	struct winsize w;
 	ioctl(0, TIOCGWINSZ, &w);
 	int cols = w.ws_col;
+	int so_far, leader;
 
 	size_t fail_count = 0;
 	for (size_t i=0; i < ARRAY_SIZE(tests); ++i) {
-		printf("Testing %s", tests[i].name);
-		for (size_t j = cols - (14 + strlen(tests[i].name)); j > 0; --j)
+		so_far = printf("Testing %.*s",
+				(MIN_COLS > cols ? MIN_COLS : cols) - 15,
+				tests[i].name);
+		leader = (cols < MIN_COLS ? MIN_COLS : cols) - (so_far + 6);
+		for (int j = leader; j > 0; --j)
 			putchar('.');
 		bool test_result = tests[i].fn();
 		if (!test_result)
