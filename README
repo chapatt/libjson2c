@@ -1,5 +1,5 @@
 libjson2c: a library for parsing JSON tokenized by jsmn into a C data structure
-based on a grammar defined in the user program
+based on a grammar defined in the client code
 
 
 Build Procedure:
